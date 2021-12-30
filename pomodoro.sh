@@ -5,7 +5,7 @@ echo "Welcome to ${bold}Pomodoro Timer! ${normal}This timer will run for 10 sess
 echo "You can quit at any time by pressing CTRL+C [^C]"
 read -p "How many minutes do you want to study for? " study_length
 read -p "How many minutes for breaks? " break_length
-secs=60
+secs=20
 
 pomo_timer () {
 	while [ $mins -gt 0 ]; do
@@ -13,12 +13,12 @@ pomo_timer () {
                         # -ne: -n blocks newline, -e interprets backslash symbols
                         # \033[0K deletes to end of line
                         # \r carriage return
-			if [ $secs -lt 10 ]; then
-                        	echo -ne "$message Time left:${bold} $((mins-1)):0$secs\033[0K\r"
+			if [ $secs -le 10 ]; then
+                        	echo -ne "$message Time left:${bold} $((mins-1)):0$((secs-1))\033[0K\r"
                         else
-				echo -ne "$message Time left:${bold} $((mins-1)):$secs\033[0K\r"
+				echo -ne "$message Time left:${bold} $((mins-1)):$((secs-1))\033[0K\r"
 			fi
-			sleep .25
+			sleep .8
                         let secs--
 		done
 	let mins--
