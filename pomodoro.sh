@@ -1,16 +1,31 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
 sessions=0
-echo "Welcome to ${bold}Pomodoro Timer! ${normal}This timer will run for 10 sessions"
-echo "You can quit at any time by pressing CTRL+C [^C]"
-read -p "How many minutes do you want to study for? " study_length
-read -p "How many minutes for breaks? " break_length
-secs=20
 
-notify () {
-        notify-send -t 10000 "Times up!"
+pomo_main () {
+	while [ $sessions -lt 10 ]; do
+		pomo_study
+		pomo_break
+		let sessions++
+	done
 }
 
+take_input () {
+	echo "Welcome to ${bold}Pomodoro Timer! ${normal}This timer will run for 10 sessions"
+	echo "You can quit at any time by pressing CTRL+C [^C]"
+	read -p "How many minutes do you want to study for? " study_length
+	if ! [[ $study_length =~ ^-?[0-9]+$ ]]; then
+		echo "Please enter an integer."
+		take_input
+	fi
+	read -p "How many minutes for breaks? " break_length
+	if ! [[ $break_length =~ ^-?[0-9]+$ ]]; then
+		echo "Please enter an integer."
+		take_input
+	fi
+	pomo_main
+}
+secs=60
 
 pomo_timer () {
 	while [ $mins -gt 0 ]; do
@@ -23,14 +38,14 @@ pomo_timer () {
                         else
 				echo -ne "$message Time left:${bold} $((mins-1)):$((secs-1))\033[0K\r"
 			fi
-			sleep .8
+			sleep 1
                         let secs--
 		done
 	let mins--
 	secs=60
 	done
-	notify
-	play bell.wav > /dev/null 2>&1
+	osascript -e 'display notification "Great work! Keep going." with title "Times up!" sound name "bell.wav"'
+	
 }
 
 pomo_study () {
@@ -48,13 +63,4 @@ pomo_break () {
 
 }
 
-pomo_main () {
-	while [ $sessions -lt 10 ]; do
-		pomo_study
-		pomo_break
-		let sessions++
-	done
-}
-
-pomo_main
-
+take_input
