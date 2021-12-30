@@ -1,11 +1,16 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
 sessions=0
-echo "Welcome to ${bold}Pomodoro Timer! ${normal}This timer will run for 10 sessions."
+echo "Welcome to ${bold}Pomodoro Timer! ${normal}This timer will run for 10 sessions"
 echo "You can quit at any time by pressing CTRL+C [^C]"
 read -p "How many minutes do you want to study for? " study_length
 read -p "How many minutes for breaks? " break_length
 secs=20
+
+notify () {
+        notify-send -t 10000 "Times up!"
+}
+
 
 pomo_timer () {
 	while [ $mins -gt 0 ]; do
@@ -24,6 +29,8 @@ pomo_timer () {
 	let mins--
 	secs=60
 	done
+	notify
+	play bell.wav > /dev/null 2>&1
 }
 
 pomo_study () {
@@ -40,7 +47,6 @@ pomo_break () {
 	pomo_timer
 
 }
-
 
 pomo_main () {
 	while [ $sessions -lt 10 ]; do
