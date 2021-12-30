@@ -1,8 +1,10 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
 sessions=0
+secs=60
 
 pomo_main () {
+	take_input
 	while [ $sessions -lt 10 ]; do
 		pomo_study
 		pomo_break
@@ -23,9 +25,7 @@ take_input () {
 		echo "Please enter an integer."
 		take_input
 	fi
-	pomo_main
 }
-secs=60
 
 pomo_timer () {
 	while [ $mins -gt 0 ]; do
@@ -63,4 +63,4 @@ pomo_break () {
 
 }
 
-take_input
+pomo_main
